@@ -1,17 +1,75 @@
+:root {
+    --color1: #000000;
+    --color2: #212121;
+    --color3: #303030;
+    --color4: #424242;
+    --color5: #FFFFFA;
+    --color6: #69FFFE;
+}
 body {
     display: flex;
     justify-content: center;
     margin: 0;
+    background-color: var(--color2);
     
 }
+
+.popup {
+    position: absolute;
+    left: max(40px, 35vw);
+    top: 250px;
+    background-color: var(--color6);
+    color: var(--color3);
+    min-width: max(300px, 30%);
+    min-height: 250px;
+    z-index: 3;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 2rem;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.popup > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.popup > button {
+    height: 40px;
+    background-color: var(--color4);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: whitesmoke;
+    border: none;
+    font-size: 1.5rem;
+    width: 50%;
+
+}
+.popup > button:hover {
+    box-shadow: 0px 0px 5px 4px #FFFFFA;
+    background-color: var(--color3);
+    transition: .4s;
+}
 .main-container {
-    border: 1px solid black;
-    height: 100vh;
+
+    height: 80vh;
+    margin-top: 4rem;
     width: 70vw;
+    background-color: var(--color3);
+    opacity: .6;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
     display: grid;
     grid-template: 1fr 3fr 1fr / 1fr;
     place-content: center;
     justify-content: center;
+
     
 }
 
@@ -19,14 +77,23 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: Arial;
+    color: #FFFFFA;
 
 }
 
 .title {
     font-size: 3rem;
-    font-family: "Berlin Sans FB";
+    font-family: "ui-sans-serif";
+    margin-top: 2rem;
 }
 
+.round-counter {
+    margin-top: 3rem;
+    font-size: 2rem;
+    color: whitesmoke;
+    justify-self: center;
+}
 .box-container {
     width: 70%;
     height: 90%;
@@ -38,12 +105,16 @@ body {
 
 .field {
     border: 1px solid black;
-    font-size: 8rem;
-    font-family: "Comic Sans MS";
+    font-size: 5rem;
+    font-family: "Arial";
+    color: #FFFFFA;
+    opacity: .7;
+    font-weight: lighter;
 
 }
 .x::after {
     content: "X";
+
 }
 
 .o::after {

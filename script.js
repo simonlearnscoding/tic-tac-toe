@@ -3,6 +3,7 @@
 const Player = (sign) => {
     var obj = {}
     obj.sign = sign;
+    obj.number = (obj.sign == 'x') ? 1 : 2
     obj.fields = [];
     return obj;
 }
@@ -10,29 +11,29 @@ const Player = (sign) => {
 
 
 const gameboard = (function () {
-    
+
+    const mainFrame = document.querySelector('.main-container')
     const buttons = document.querySelectorAll('.field')
     console.log(buttons)
     let fields = ["","","", "","","", "","",""]
+    let resetFields = () => { gameboard.fields = ["","","", "","","", "","",""] }
     buttons.forEach( field => { field.addEventListener('click', () => {gameFlow.playRound(field.id)})})
     const fillField = (sign, id) => {
-        fields[id - 1] = sign;
+        gameboard.fields[id - 1] = sign;
         display();
     }
 
     const display = () => {
-        console.log("it works")
         for(let x = 0; x < fields.length; x++) {
-            if (fields[x] == "x") {
+            if (gameboard.fields[x] == "x") {
                 buttons[x].classList.add('x')
-                console.log("hihi")
             }
-            else if (fields[x] == "o") {
+            else if (gameboard.fields[x] == "o") {
                 buttons[x].classList.add('o')
             }
         }
     }
-    return {display, fields, fillField}
+    return {display, fields, fillField, buttons, resetFields, mainFrame}
     })()
 
 gameboard.display()
@@ -44,29 +45,63 @@ const gameFlow = (() => {
     const player2 = Player('o');
     const roundCounter = document.querySelector('.round-counter')
     let round = 0;
+
+    let gameEndPopup = (message) => {
+        let popUp = document.createElement('div')
+        let popUpText = document.createElement('div')
+        popUpText.innerText = message
+        let popUpButton = document.createElement('button')
+        popUpButton.innerText = "okay cool"
+        popUp.classList.add('popup')
+        popUp.appendChild(popUpText)
+        popUp.appendChild(popUpButton)
+        gameboard.mainFrame.appendChild(popUp)
+        popUpButton.addEventListener('click', () => {popUp.remove()})
+    }
+
+    gameIsOver = (message) => {
+        round = 0;
+        roundCounter.textContent = `Round ${round}`
+        gameEndPopup(message)
+        gameboard.resetFields()
+        for(let x = 0; x < gameboard.buttons.length; x++) {
+            gameboard.buttons[x].classList.remove('x', 'o')
+        }
+        player1.fields = []
+        player2.fields = []
+
+        gameboard.display()
+    }
     const checkWinner = (player) => {
         const winningPatterns = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
 
         for (let i = 0; i < winningPatterns.length; i++) {
-            if (winningPatterns[i].every(element => {
-            player.fields.includes(element) })) {
-            return `PLAYER WON!`}
+            let curpattern = winningPatterns[i]
+            let correct = 0;
+            for(let j=0; j < curpattern.length; j++) {
+                if (player.fields.includes(curpattern[j])) {
+                    correct++;
+                }}
+            if (correct == 3) {
+                let message = (`Player ${player.number} Won!`)
+                gameIsOver(message);
+            }
         }
-
-        if (player.fields)
         if (round == 9) {
-            return "DRAW!"
+            gameIsOver("DRAW!");
         }
     }
     roundCounter.textContent = `Round ${round}`
-    let gameIsOver = false;
     const playRound = (id) => {
-
         //if field not empty -> return
+        if (gameboard.fields[id - 1] != '') {
+            console.log("this field is not empty")
+            return
+        }
         round++
         roundCounter.textContent = `Round ${round}`
         var player = (round % 2 == 1) ? player1 : player2;
-        player.fields.push(id);
+        player.fields.push(parseInt(id));
         gameboard.fillField(player.sign, id);
         checkWinner(player)
 
